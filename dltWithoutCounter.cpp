@@ -70,6 +70,10 @@ class LinkList {
         
     }
 
+    void showNNode(Node* head) {
+        
+    }
+
 
 };
 
