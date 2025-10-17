@@ -4,30 +4,23 @@ using namespace std;
 
 bool isOprnd(char el) {
     // Check if el is an alphabet (A-Z or a-z) OR a digit (0-9)
-    if ((el >= 'A' && el <= 'Z') || 
+    return (el >= 'A' && el <= 'Z') || 
         (el >= 'a' && el <= 'z') || 
-        (el >= '0' && el <= '9')) 
-    {
-        return true;
-    }
-    return false;
+        (el >= '0' && el <= '9');
 }
 
 bool isOprtr(char el) {
-    if (el == '+' || el == '-' || el == '*' || el == '/' || el == '^') {
-        return true;
-    }
-    return false;
+    return (el == '+' || el == '-' || el == '*' || el == '/' || el == '^');
 }
 
 
 int preced(char el) {
     if (el == '^') {
-        return 6;
+        return 3;
     } else if (el == '*' || el == '/') {
-        return 5;
+        return 2;
     } else if (el == '+' || el == '-') {
-        return 4;
+        return 1;
     }
 
     return -1;
@@ -35,45 +28,47 @@ int preced(char el) {
 
 
 string infixToPost(string infix) {
-    cout << "hello1";
     string postfix = "";
     stack<char> st;
 
     for (int i = 0; i < infix.length(); i++) {
-         cout << "hello2";
         if (isOprnd(infix[i])) {
-            postfix.push_back(infix[i]);
-[p]        } else if (infix[i] == '(') {
-            st.push(infix[i]);
+            postfix.push_back(infix[i]); // n
+        } else if (infix[i] == '(') {
+            st.push(infix[i]); // 1
         } else if (infix[i] == ')') {
             char el = st.top();
-i            while (el != '(') {
+           while (el != '(') { // n
                 st.pop();
                 postfix.push_back(el);
                 el = st.top();
             }
-            st.pop();
+            st.pop(); // 1
             // lets assume input is a valid infix
-        } else {
-            char el = st.top();
-            char in = infix[i];
-            if (isOprtr(el)) {
-                while (preced(in) == preced(el) || preced(in) < preced(el)) {
-                st.pop();
-                postfix.push_back(el);
-                el = st.top();
-            } else {
-                st.push(in);
+        } else { // we have operator here
+            while (!st.empty()) { // n-4, 5, 6
+                char tp = st.top();
+                if (isOprtr(tp)) {
+                    if (infix[i] == '^' && tp == '^') {
+                         break;
+                    }
+                    if (preced(infix[i]) <= preced(tp)) {
+                        st.pop();
+                        postfix.push_back(tp); // 1
+                    } else {
+                        break;
+                    }
+                } else {
+                    break;
+                }
             }
-            } else {
-                st.push(in);
-            }
-            
+
+            st.push(infix[i]); // 1
+                    
             
         } 
     }
 
-     cout << "hello3";
 
     while (!st.empty()) {
         char el = st.top();
