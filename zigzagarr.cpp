@@ -34,14 +34,17 @@ int minEven(vector<int> nums) {
     // main program
     for (int i = 0; i < target; i++) {
         if (i%2 == 0) {
-            if (i == 0 && nums[i+1] >= nums[i]) {
+            if (i == 0 && i+1 < len && nums[i+1] >= nums[i]) {
                makeGreater(i, i+1, moves, nums);
-            } else if (i == len-1 && nums[i-1] >= nums[i]) {
+            } else if (i == len-1 && i-1 >= 0 && nums[i-1] >= nums[i]) {
                 makeGreater(i, i-1, moves, nums);
             } else {
-                if (nums[i-1] >= nums[i]) {
+                // check left el
+                if (i-1 >=0 && nums[i-1] >= nums[i]) {
                     makeGreater(i, i-1, moves, nums);
-                } else if (nums[i+1] >= nums[i]) {
+                }
+                // check right el
+                if (i+1 < len && nums[i+1] >= nums[i]) {
                     makeGreater(i, i+1, moves, nums);
                 }
             }
@@ -52,7 +55,8 @@ int minEven(vector<int> nums) {
 }
 
 int minOdd(vector<int> nums) {
-    int moves = 0;
+      int moves = 0;
+
     // set the target
     int len = nums.size();
     int target;
@@ -64,12 +68,13 @@ int minOdd(vector<int> nums) {
     // main program
     for (int i = 0; i < target; i++) {
         if (i%2 != 0) {
-            if (i == len-1 && nums[i-1] >= nums[i]) {
+            if (i == len-1 && i-1 >=0 && nums[i-1] >= nums[i]) {
                makeGreater(i, i-1, moves, nums);
             }  else {
-                if (nums[i-1] >= nums[i]) {
+                if (i-1 >=0 && nums[i-1] >= nums[i]) {
                     makeGreater(i, i-1, moves, nums);
-                } else if (nums[i+1] >= nums[i]) {
+                } 
+                if (i+1 < len && nums[i+1] >= nums[i]) {
                     makeGreater(i, i+1, moves, nums);
                 }
             }
@@ -93,7 +98,7 @@ int minMovs(vector<int> nums) {
 
 
 int main() {
-    vector<int> nums = {9,6,1,6,2};
+    vector<int> nums = {7, 4, 8, 9, 7, 7, 5};
     int ans  = minMovs(nums);
     cout << ans;
     return 0;
